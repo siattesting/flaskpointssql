@@ -49,22 +49,22 @@ def transfer():
         g.user = get_db().execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
         user = g.user['id'] 
 
-    sender_id = session['user_id']
-    receiver_id = request.form['receiver_id']
-    points = int(request.form['points'])
+        sender_id = session['user_id']
+        receiver_id = request.form['receiver_id']
+        points = int(request.form['points'])
 
-    db = get_db()
+        db = get_db()
 
-    sender_points = db.execute('SELECT points FROM points WHERE user_id = ?', [sender_id]).fetchone()
-    if not sender_points or sender_points['points'] < points:
-        flash('Insufficient points')
-        return redirect(url_for('points.points'))
+        sender_points = db.execute('SELECT points FROM points WHERE user_id = ?', [sender_id]).fetchone()
+        if not sender_points or sender_points['points'] < points:
+            flash('Insufficient points')
+            return redirect(url_for('points.points'))
 
-    db.execute('UPDATE points SET points = points - ? WHERE user_id = ?', [points, sender_id])
-    db.execute('UPDATE points SET points = points + ? WHERE user_id = ?', [points, receiver_id])
-    db.execute('INSERT INTO transactions (sender_id, receiver_id, points) VALUES (?, ?, ?)', 
+        db.execute('UPDATE points SET points = points - ? WHERE user_id = ?', [points, sender_id])
+        db.execute('UPDATE points SET points = points + ? WHERE user_id = ?', [points, receiver_id])
+        db.execute('INSERT INTO transactions (sender_id, receiver_id, points) VALUES (?, ?, ?)', 
                [sender_id, receiver_id, points])
-    db.commit()
+        db.commit()
 
 
     # below code is using SQL Alchemy delete the following if unused
@@ -81,7 +81,7 @@ def transfer():
     # db.session.add(transaction)
     # db.session.commit()
 
-    return redirect(url_for('points.points'))
+        return redirect(url_for('points.points'))
 
 @bp.route('/redeem', methods=['POST'])
 @login_required
