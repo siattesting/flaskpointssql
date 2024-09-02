@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- <h1>Welcome, {{ user.username }}</h1> -->
+<h1>Welcome, {{ g.user['username'] }}</h1>
+
+<p>Your Points: {{ g.user['points'] }}</p>
+
+<h2>Transfer Points</h2>
+<form action="{{ url_for('points.transfer') }}" method="post">
+    <input type="text" name="receiver_id" placeholder="Receiver ID" required>
+    <input type="number" name="points" placeholder="Points to Transfer" required>
+    <button type="submit">Transfer</button>
+</form>
+
+<h2>Redeem Points</h2>
+<form action="{{ url_for('points.redeem') }}" method="post">
+    <input type="text" name="item" placeholder="Item" required>
+    <input type="number" name="points" placeholder="Points to Redeem" required>
+    <button type="submit">Redeem</button>
+</form>
+{% endblock %}
