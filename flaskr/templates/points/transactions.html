@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Transactions | {{ g.user['email'] }} | FlaskLoyaltyPoints {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div>
+    <h3>Welcome, {{ g.user['email'] }}!</h3>
+    {% if user.points > 0 %}
+    <p>You have {{ g.user['points'] }} points.</p>
+    {% else %}
+    <p>You have no points remaining</p>
+    {% endif %}
+  </div>
+</div>
+{% if transactions or redemptions %}
+<section>
+    <!-- TODO: make this section as tabs ?-->
+    <div class="grid">
+        <article>
+            <h3>Transfers</h3>
+           <table class="table">
+             <thead>
+               <tr>
+                 <th>Date</th>
+                 <th>Amount</th>
+                 <th>To</th>
+               </tr>
+             </thead>
+             <tbody>
+               {% for transaction in transactions %}
+               <tr>
+                 <td>{{ transaction.created }}</td>
+                 <td>{{ transaction.points }}</td>
+                 <td>{{ transaction.receiver_id }}</td>
+               </tr>
+               {% endfor %}
+             </tbody>
+           </table>
+          </article>
+        <article>
+            <h3>Redemptions </h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Voucher</th>
+                  <th>Merchant</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for r in redemptions %}
+                <tr>
+                  <td>{{ r.created }}</td>
+                  <td>{{ r.points_redeemed }}</td>
+                  <td>{{ r.code }}</td>
+                  <td>{{ r.name }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+        </article>
+    </div>
+</section>
+{% else %}
+<p>No transactions to display </p>
+{% endif %}
+
+{% endblock %}

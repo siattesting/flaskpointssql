@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Dashboard of {{ g.user['email'] }} {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Welcome, {{ g.user['email'] }}!</h2>
+    {% if g.user['points'] > 0 %}
+    <p>You have {{ g.user['points'] }} points.</p>
+    {% else %}
+    <p>You have no points remaining</p>
+    {% endif %}
+  </div>
+</div>
+<section>
+    <!-- TODO: make this section as tabs ?-->
+    <div class="grid">
+        <article>
+            <h3>Transfer points</h3>
+            <form method="POST" action="{{ url_for('points.transfer') }}">
+                <label for="receiver">Transfer points to:</label>
+                <input type="email" id="receiver" name="receiver" required placeholder="Enter your receiver's email">
+                <label for="points">Enter the number of points to transfer:</label>
+                <input type="number" id="points" name="points" required min="1">
+                <input type="submit" value="Transfer">
+            </form>
+        </article>
+        <article>
+            <h3>Redeem a voucher </h3>
+            <form method="POST" action="{{ url_for('points.redeem') }}">
+                <label for="voucher">Enter the voucher code:</label>
+                <input type="text" id="voucher" name="voucher" required placeholder="Enter your voucher code">
+                <input type="submit" value="Redeem">
+            </form>
+        </article>
+    </div>
+</section>
+
+{% endblock %}

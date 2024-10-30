@@ -1,2 +1,0 @@
-# flaskloyaltypoints
-# flaskloyaltypoints

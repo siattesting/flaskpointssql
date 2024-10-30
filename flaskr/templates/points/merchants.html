@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Dashboard of {{ g.user['email'] }} {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Welcome, {{ g.user['email'] }}!</h2>
+    {% if g.user['points'] > 0 %}
+    <p>You have {{ g.user['points'] }} points.</p>
+    {% else %}
+    <p>You have no points remaining</p>
+    {% endif %}
+  </div>
+</div>
+
+<section>
+    <!-- TODO: make this section as tabs ?-->
+    <div class="grid">
+        <article>
+            <h3>Merchants</h3>
+            {% if not merchants %}
+            <p>No merchants to display </p>
+            {% else %}
+           <table class="table">
+             <thead>
+               <tr>
+                 <th>ID</th>
+                 <th>Name</th>
+                 <th>Email</th>
+               </tr>
+             </thead>
+             <tbody>
+               {% for merchant in merchants %}
+               <tr>
+                 <td>{{ merchant.id }}</td>
+                 <td>{{ merchant.name }}</td>
+                 <td>{{ merchant.email }}</td>
+               </tr>
+               {% endfor %}
+             </tbody>
+           </table>
+           {% endif %}
+        </article>
+        <article>
+            <h3>Vouchers </h3>
+            {% if not vouchers %}
+            <p>No vouchers to display </p>
+            {% else %}
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Code</th>
+                    <th>Status</th>
+                    <th>MerchantID</th>
+                    <th>Points</th>
+                    <th>Redeemed by:</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for v in voucherlist %}
+                  <tr>
+                    <td>{{ v.id }}</td>
+                    <td>{{ v.code }}</td>
+                    <td>{{ v.status }}</td>
+                    <td>{{ v.name }}</td>
+                    <td>{{ v.points_redeemed }}</td>
+                    <td>{{ v.user_id }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% endif %}
+            </article>
+    </div>
+</section>
+
+{% endblock %}

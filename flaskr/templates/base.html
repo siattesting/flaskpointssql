@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - FlaskLoyaltyPoints</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pico.min.css') }}">
+</head>
+<body class="container">
+    <nav>
+        <h1><a href="{{ url_for('pages.index') }}">FlaskLoyaltyPoints</a></h1>
+        <ul>
+            <li><a href="{{ url_for('pages.index') }}">Home</a></li>
+            <li><a href="{{ url_for('pages.about') }}">About</a></li>
+            {% if g.user %}
+                <li><a href="{{ url_for('points.dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('points.transactions') }}">Transactions</a></li>
+                <li><a href="{{ url_for('points.merchants') }}">Merchants</a></li>
+                <li><span>{{ g.user['username'] }}</span>
+                <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+            {% else %}
+                <li><a href="{{ url_for('auth.register') }}">Register</a>
+                <li><a href="{{ url_for('auth.login') }}">Log In</a>
+            {% endif %}
+        </ul>
+  </nav>
+    <section class="container">
+        <header>
+        {% block header %}{% endblock %}
+        </header>
+        {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </section>
+</body>
+</html>
+
+
