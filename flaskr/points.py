@@ -124,7 +124,8 @@ def transactions():
 
 
     # Fetch all redemptions of points from the currently logged in user
-    redemptions = db.execute("SELECT v.id,  code, points_redeemed, v.created, name FROM vouchers v JOIN merchants m ON v.merchant_id = m.id AND v.user_id = ? ORDER BY v.created DESC", (user_id,)).fetchall()
+    redemptions = db.execute(
+        "SELECT v.id,  code, points_redeemed, v.created, name FROM vouchers v JOIN merchants m ON v.merchant_id = m.id AND v.user_id = ? ORDER BY v.created DESC", (user_id,)).fetchall()
     for r in redemptions:
         print(r['name'])
 
@@ -137,17 +138,19 @@ def merchants():
     db = get_db()
     user = db.execute("SELECT * FROM user WHERE id = ?", (session['user_id'],)).fetchone()
 
+    # Select all merchants
     merchants = db.execute("SELECT * FROM merchants").fetchall()
-    vouchers = db.execute("SELECT * FROM vouchers").fetchall()
 
-    # select data from vouchers combined with merchants to list vouchers with the name of the merchant
-    list = db.execute("SELECT vouchers.id, vouchers.code, vouchers.status, vouchers.merchant_id, user_id, vouchers.points_redeemed, merchants.name FROM vouchers JOIN merchants ON vouchers.merchant_id = merchants.id").fetchall()
-    
-    voucherlist = db.execute("SELECT v.id, code, points_redeemed, status, v.created, name FROM vouchers v JOIN merchants m ON v.merchant_id = m.id").fetchall()
-    for v in voucherlist:
-        print(v['code'], v['name'])
+    # select data from vouchers combined with merchants to list vouchers with the name of the merchant and combined with USER to output the user's email
+    voucherlist = db.execute(
+        'SELECT v.id, v.code, v.points_redeemed,v. status, v.created, m.name,u.email '
+        'FROM ((vouchers v JOIN merchants m ON v.merchant_id = m.id) '
+        'LEFT JOIN user u ON v.user_id = u.id)').fetchall()
+   
+    # for v in voucherlist:
+        # print(v['code'], v['name'], v['email'])
 
-    return render_template('points/merchants.html', merchants=merchants, vouchers=vouchers, user=user, voucherlist=voucherlist)
+    return render_template('points/merchants.html', merchants=merchants, user=user, voucherlist=voucherlist)
 
 
 @bp.route('/populate', methods=['GET', 'POST'])

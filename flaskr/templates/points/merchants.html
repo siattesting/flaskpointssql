@@ -45,7 +45,7 @@
         </article>
         <article>
             <h3>Vouchers </h3>
-            {% if not vouchers %}
+            {% if not voucherlist %}
             <p>No vouchers to display </p>
             {% else %}
             <table class="table">
@@ -67,7 +67,7 @@
                     <td>{{ v.status }}</td>
                     <td>{{ v.name }}</td>
                     <td>{{ v.points_redeemed }}</td>
-                    <td>{{ v.user_id }}</td>
+                    <td>{{ v.email }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
