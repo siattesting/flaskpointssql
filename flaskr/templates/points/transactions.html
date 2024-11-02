@@ -20,6 +20,12 @@
     <div class="grid">
         <article>
             <h3>Transfers</h3>
+            <div>
+              <p>Total points received: {{ total_points_received }}</p>
+              <p>Total points transferred out: {{ total_points_sent }}</p>
+              <p>Total points from vouchers/merchants: {{ total_points_redeemed }}</p>
+              <p><strong>Balance form totals: {{ balance_from_totals }}</strong></p>
+            </div>
            <table class="table">
              <thead>
                <tr>
