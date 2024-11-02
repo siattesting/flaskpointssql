@@ -25,15 +25,19 @@
                <tr>
                  <th>Date</th>
                  <th>Amount</th>
-                 <th>To</th>
+                 <th>Counterpart</th>
                </tr>
              </thead>
              <tbody>
-               {% for transaction in transactions %}
+               {% for tx in transactions %}
                <tr>
-                 <td>{{ transaction.created }}</td>
-                 <td>{{ transaction.points }}</td>
-                 <td>{{ transaction.receiver_id }}</td>
+                 <td>{{ tx.created }}</td>
+                 <td>{{ tx.points }}</td>
+                 {% if tx.sender_id == g.user['id'] %}
+                 <td>to {{ tx.email }}</td>
+                 {% else %}
+                 <td>from {{ tx.email }}</td>
+                 {% endif %}
                </tr>
                {% endfor %}
              </tbody>

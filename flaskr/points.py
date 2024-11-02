@@ -113,24 +113,38 @@ def transactions():
 
     user = db.execute("SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
 
-    transactions = db.execute("SELECT sender_id, receiver_id, points, created FROM transactions WHERE sender_id = ? OR receiver_id = ? ORDER BY created DESC", (user_id, user_id)).fetchall()
+    transactions2 = db.execute("SELECT sender_id, receiver_id, points, created FROM transactions WHERE sender_id = ? OR receiver_id = ? ORDER BY created DESC", (user_id, user_id)).fetchall()
 
     # Fetch all transactions of points from the currently logged in user
-    transactions2 = db.execute(
-        'SELECT t.sender_id, t.receiver_id, t.points, t.created, email from transactions t '
-        ' JOIN  user u ON t.sender_id = u.id OR t.receiver_id = u.id AND t.sender_id = ? OR t.receiver_id = ?', (user_id, user_id)).fetchall()
+    transactions = db.execute(
+        'SELECT t.sender_id, t.receiver_id, t.points, t.created, u.email from transactions t '
+        ' JOIN  user u ON t.sender_id = u.id OR t.receiver_id = u.id AND t.sender_id = ? OR t.receiver_id = ? ORDER BY created DESC', (user_id, user_id)).fetchall()
     
+    # make a sum of all points received by the current user
+    total_points_received = sum(t[2] for t in transactions if t[1] == user_id)
+    total_points_sent = sum(t[2] for t in transactions if t[0] == user_id)
 
-
-
+   
     # Fetch all redemptions of points from the currently logged in user
     redemptions = db.execute(
         "SELECT v.id,  code, points_redeemed, v.created, name FROM vouchers v JOIN merchants m ON v.merchant_id = m.id AND v.user_id = ? ORDER BY v.created DESC", (user_id,)).fetchall()
     for r in redemptions:
         print(r['name'])
 
+    # make a sume of all points redeemed by the user
+    total_points_redeemed = sum(r[2] for r in redemptions)
 
-    return render_template('points/transactions.html', transactions=transactions, redemptions=redemptions, user=user)
+    balance_from_totals = total_points_received + total_points_redeemed - total_points_sent
+
+
+    return render_template('points/transactions.html', 
+                           transactions=transactions,
+                            redemptions=redemptions, 
+                            user=user,
+                            total_points_received=total_points_received,
+                            total_points_sent = total_points_sent,
+                            total_points_redeemed=total_points_redeemed,
+                            balance_from_totals=balance_from_totals)
 
 @bp.route('/merchants', methods=['GET', 'POST'])
 @login_required
